@@ -3,18 +3,25 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
 
+var fileHashes map[string]string
+var monitoringPath string
+var skipDirectory string
+var cmd *exec.Cmd
+
 var rootCmd = &cobra.Command{
 	Use:  "gomon",
-	Long: `Gomon will monitor for any changes in your source code and automatically restart your app`,
+	Long: `gomon will monitor for any changes in your source code and automatically restart your app`,
 	Run: func(cmd *cobra.Command, args []string) {
-		monitoringPath := "./"
-		skipDirectory := ".git"
-		fileHashes := make(map[string]string)
+		monitoringPath = "./"
+		skipDirectory = ".git"
+
+		fileHashes = make(map[string]string)
 		filepath.Walk(monitoringPath, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
@@ -28,9 +35,17 @@ var rootCmd = &cobra.Command{
 			fileHashes[path], _ = fileMd5(path)
 			return nil
 		})
-		for key, value := range fileHashes {
-			fmt.Printf("%s = %s\n", key, value)
-		}
+
+		go fileWatcher()
+
+		// Run the web server
+		fmt.Println(`Started server`)
+		//cmd = exec.Command(`go`, `run`, `web/main.go`)
+		//cmd.Run()
+
+		// Create a channel and wait on it. This is here so the main thread exit
+		doneChannel := make(chan bool)
+		_ = <-doneChannel
 	},
 }
 

@@ -8,27 +8,20 @@ import (
 )
 
 func fileMd5(filePath string) (string, error) {
-	var returnMD5String string
+	var md5String string
 
 	file, err := os.Open(filePath)
 	if err != nil {
-		return returnMD5String, err
+		return md5String, err
 	}
-
 	defer file.Close()
 
 	hash := md5.New()
-
-	//Copy the file in the hash interface and check for any error
 	if _, err := io.Copy(hash, file); err != nil {
-		return returnMD5String, err
+		return md5String, err
 	}
-
-	//Get the 16 bytes hash
 	hashInBytes := hash.Sum(nil)[:16]
+	md5String = hex.EncodeToString(hashInBytes)
 
-	//Convert the bytes to a string
-	returnMD5String = hex.EncodeToString(hashInBytes)
-
-	return returnMD5String, nil
+	return md5String, nil
 }
