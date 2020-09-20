@@ -1,8 +1,8 @@
 # Gomon
 
-Gomon is a utility for monitoring changes in your source code and automatically restart your program.
+Gomon is a utility for monitoring changes in your Go source code and automatically restart your program.
 
-This is particularly useful for development of servers.
+This is particularly useful for development of Go servers.
 
 ## Install
 
