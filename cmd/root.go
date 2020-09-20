@@ -3,50 +3,47 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/exec"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 
 	"github.com/spf13/cobra"
 )
 
-var fileHashes map[string]string
 var monitoringPath string
 var skipDirectory string
-var cmd *exec.Cmd
+var pid int
+var program string
+
+func gomon(cmd *cobra.Command, args []string) {
+	program = args[0]
+	monitoringPath = "./"
+	skipDirectory = ".git"
+
+	filepath.Walk(monitoringPath, hashFiles)
+
+	done := make(chan bool)
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, os.Interrupt)
+
+	pid = runProgram()
+
+	go func() {
+		<-signalChan
+		syscall.Kill(-pid, 15)
+		done <- true
+	}()
+
+	go fileWatcher()
+
+	<-done
+}
 
 var rootCmd = &cobra.Command{
 	Use:  "gomon",
 	Long: `gomon will monitor for any changes in your source code and automatically restart your app`,
-	Run: func(cmd *cobra.Command, args []string) {
-		monitoringPath = "./"
-		skipDirectory = ".git"
-
-		fileHashes = make(map[string]string)
-		filepath.Walk(monitoringPath, func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if info.IsDir() && info.Name() == skipDirectory {
-				return filepath.SkipDir
-			}
-			if info.IsDir() {
-				return nil
-			}
-			fileHashes[path], _ = fileMd5(path)
-			return nil
-		})
-
-		go fileWatcher()
-
-		// Run the web server
-		fmt.Println(`Started server`)
-		//cmd = exec.Command(`go`, `run`, `web/main.go`)
-		//cmd.Run()
-
-		// Create a channel and wait on it. This is here so the main thread exit
-		doneChannel := make(chan bool)
-		_ = <-doneChannel
-	},
+	Args: cobra.MinimumNArgs(1),
+	Run:  gomon,
 }
 
 func Execute() {
