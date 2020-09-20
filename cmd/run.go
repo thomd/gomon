@@ -5,13 +5,13 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
+
+	"github.com/gookit/color"
 )
 
-var firstCall bool
-
-func init() {
-	firstCall = true
-}
+var firstCall = true
+var green = color.FgGreen.Render
+var yellow = color.FgYellow.Render
 
 func runProgram() int {
 	cmd := exec.Command("go", "run", program)
@@ -21,13 +21,17 @@ func runProgram() int {
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	cmd.Start()
 
+	pid, _ := syscall.Getpgid(cmd.Process.Pid)
+
 	if firstCall {
-		fmt.Println("Start")
+		fmt.Printf(yellow("[gomon] %s\n"), VERSION)
+		fmt.Printf(yellow("[gomon] monitoring '%s*.*'\n"), monitoringPath)
+		fmt.Printf(yellow("[gomon] excluding '%s%s'\n"), monitoringPath, skipDirectory)
+		fmt.Printf(green("[gomon] starting 'go run %s' (pid:%d)\n"), program, pid)
 		firstCall = false
 	} else {
-		fmt.Println("Restart")
+		fmt.Printf(green("[gomon] restarting 'go run %s' (pid:%d)\n"), program, pid)
 	}
 
-	id, _ := syscall.Getpgid(cmd.Process.Pid)
-	return id
+	return pid
 }
