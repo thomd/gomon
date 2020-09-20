@@ -9,9 +9,11 @@ import (
 	"github.com/gookit/color"
 )
 
-var firstCall = true
-var green = color.FgGreen.Render
-var yellow = color.FgYellow.Render
+var (
+	firstCall = true
+	green     = color.FgGreen.Render
+	yellow    = color.FgYellow.Render
+)
 
 func runProgram() int {
 	cmd := exec.Command("go", "run", program)

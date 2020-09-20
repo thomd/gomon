@@ -43,8 +43,9 @@ func gomon(cmd *cobra.Command, args []string) {
 }
 
 var rootCmd = &cobra.Command{
-	Use:     "gomon",
-	Long:    `gomon will monitor for any changes in your Go source code and automatically restart your app`,
+	Use: "gomon",
+	Long: `
+Gomon will monitor for any changes in your Go source code and automatically restart your app`,
 	Args:    cobra.MinimumNArgs(1),
 	Version: VERSION,
 	Run:     gomon,
