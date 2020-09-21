@@ -1,0 +1,23 @@
+before:
+  hooks:
+    - go mod download
+    - go generate ./...
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+archives:
+  - replacements:
+      darwin: macOS
+      linux: Linux
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  filters:
+    exclude:
+      - code( |-)?cleanup
+      - typo
+env_files:
+  github_token: ~/.git/github_token_goreleaser
