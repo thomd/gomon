@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"syscall"
@@ -49,6 +50,7 @@ func restartOnFileChange(path string, info os.FileInfo, err error) error {
 
 	if hash, ok := fileHashes[path]; !ok || hash != fileHash {
 		fileHashes[path] = fileHash
+		fmt.Printf(yellow("[gomon] file '%s' changed\n"), path)
 		syscall.Kill(-pid, 15)
 		pid = runProgram()
 	}

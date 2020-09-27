@@ -5,15 +5,9 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
-
-	"github.com/gookit/color"
 )
 
-var (
-	firstCall = true
-	green     = color.FgGreen.Render
-	yellow    = color.FgYellow.Render
-)
+var firstCall = true
 
 func runProgram() int {
 	cmd := exec.Command("go", "run", program)
