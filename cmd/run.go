@@ -23,7 +23,9 @@ func runProgram() int {
 	if firstCall {
 		fmt.Printf(yellow("[gomon] %s\n"), VERSION)
 		fmt.Printf(yellow("[gomon] monitoring files: %s*.*\n"), monitoringPath)
-		fmt.Printf(yellow("[gomon] ignoring folders: %s\n"), strings.Join(ignoreDirs[:], ", "))
+		if len(ignoreDirs) > 0 {
+			fmt.Printf(yellow("[gomon] ignoring folders: %s\n"), strings.Join(ignoreDirs[:], ", "))
+		}
 		fmt.Printf(green("[gomon] starting 'go run %s' (pid:%d)\n"), program, pid)
 		firstCall = false
 	} else {
