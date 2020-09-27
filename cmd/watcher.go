@@ -42,8 +42,12 @@ func storeHash(path, fileHash string) {
 
 func restartOnFileChange(path, fileHash string) {
 	if hash, ok := fileHashes[path]; !ok || hash != fileHash {
+		action := "changed"
+		if !ok {
+			action = "added"
+		}
+		fmt.Printf(yellow("[gomon] file '%s' %s\n"), path, action)
 		fileHashes[path] = fileHash
-		fmt.Printf(yellow("[gomon] file '%s' changed\n"), path)
 		syscall.Kill(-pid, 15)
 		pid = runProgram()
 	}
