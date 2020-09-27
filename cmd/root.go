@@ -22,7 +22,7 @@ func gomon(cmd *cobra.Command, args []string) {
 	program = args[0]
 	monitoringPath = "./"
 
-	filepath.Walk(monitoringPath, filesToHash(storeHash))
+	filepath.Walk(monitoringPath, filesToWatch(storeHash))
 
 	done := make(chan bool)
 	signalChan := make(chan os.Signal, 1)

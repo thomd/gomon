@@ -14,7 +14,7 @@ func init() {
 	fileHashes = make(map[string]string)
 }
 
-func filesToHash(callback func(path string, fileHash string)) filepath.WalkFunc {
+func filesToWatch(callback func(path string, fileHash string)) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -51,7 +51,7 @@ func restartOnFileChange(path, fileHash string) {
 
 func fileWatcher() {
 	for {
-		filepath.Walk(monitoringPath, filesToHash(restartOnFileChange))
+		filepath.Walk(monitoringPath, filesToWatch(restartOnFileChange))
 		time.Sleep(100 * time.Millisecond)
 	}
 }
