@@ -22,7 +22,7 @@ func runProgram() int {
 
 	if firstCall {
 		fmt.Printf(yellow("[gomon] %s\n"), VERSION)
-		fmt.Printf(yellow("[gomon] monitoring files: %s*.*\n"), monitoringPath)
+		fmt.Printf(yellow("[gomon] monitoring files: *%s\n"), fileExtension)
 		if len(ignoreDirs) > 0 {
 			fmt.Printf(yellow("[gomon] ignoring folders: %s\n"), strings.Join(ignoreDirs[:], ", "))
 		}

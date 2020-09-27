@@ -27,6 +27,9 @@ func filesToWatch(callback func(path string, fileHash string)) filepath.WalkFunc
 			}
 			return nil
 		}
+		if filepath.Ext(path) != fileExtension {
+			return nil
+		}
 		fileHash, err := fileMd5(path)
 		if err != nil {
 			panic(`could not calculate hash for ` + path)

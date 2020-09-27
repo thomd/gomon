@@ -12,7 +12,8 @@ import (
 
 var (
 	VERSION        = "0.2.0"
-	monitoringPath string
+	monitoringPath = "./"
+	fileExtension  = ".go"
 	ignoreDirs     []string
 	pid            int
 	program        string
@@ -20,7 +21,6 @@ var (
 
 func gomon(cmd *cobra.Command, args []string) {
 	program = args[0]
-	monitoringPath = "./"
 
 	filepath.Walk(monitoringPath, filesToWatch(storeHash))
 
