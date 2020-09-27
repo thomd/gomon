@@ -8,12 +8,12 @@ This is particularly useful for development of Go servers.
 
     go get github.com/thomd/gomon
 
-## Usage
+## Examples of usage
 
-Instead of a regular
+Run `go run .` as
 
-    go run server.go
+    gomon .
 
-run
+Ignore folders with `-i` flag:
 
-    gomon server.go
+    gomon -i .git -i test .

@@ -19,5 +19,6 @@ changelog:
     exclude:
       - code( |-)?cleanup
       - typo
+      - readme
 env_files:
   github_token: ~/.git/github_token_goreleaser
