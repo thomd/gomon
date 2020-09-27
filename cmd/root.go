@@ -11,9 +11,9 @@ import (
 )
 
 var (
-	VERSION        = "0.1.0"
+	VERSION        = "0.2.0"
 	monitoringPath string
-	skipDirectory  string
+	ignoreDirs     []string
 	pid            int
 	program        string
 )
@@ -21,9 +21,8 @@ var (
 func gomon(cmd *cobra.Command, args []string) {
 	program = args[0]
 	monitoringPath = "./"
-	skipDirectory = ".git"
 
-	filepath.Walk(monitoringPath, hashFiles)
+	filepath.Walk(monitoringPath, filesToHash(storeHash))
 
 	done := make(chan bool)
 	signalChan := make(chan os.Signal, 1)
@@ -52,6 +51,7 @@ Gomon will monitor for any changes in your Go source code and automatically rest
 }
 
 func Execute() {
+	rootCmd.Flags().StringSliceVarP(&ignoreDirs, "ignore", "i", []string{}, "ignore directories")
 	rootCmd.SetVersionTemplate(`gomon version: {{.Version}}`)
 
 	if err := rootCmd.Execute(); err != nil {

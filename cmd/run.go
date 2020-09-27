@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"syscall"
 )
 
@@ -21,8 +22,8 @@ func runProgram() int {
 
 	if firstCall {
 		fmt.Printf(yellow("[gomon] %s\n"), VERSION)
-		fmt.Printf(yellow("[gomon] monitoring '%s*.*'\n"), monitoringPath)
-		fmt.Printf(yellow("[gomon] excluding '%s%s'\n"), monitoringPath, skipDirectory)
+		fmt.Printf(yellow("[gomon] monitoring files: %s*.*\n"), monitoringPath)
+		fmt.Printf(yellow("[gomon] ignoring folders: %s\n"), strings.Join(ignoreDirs[:], ", "))
 		fmt.Printf(green("[gomon] starting 'go run %s' (pid:%d)\n"), program, pid)
 		firstCall = false
 	} else {
