@@ -6,7 +6,7 @@ This is particularly useful for development of Go servers.
 
 ## Install
 
-    go get github.com/thomd/gomon
+    go install github.com/thomd/gomon@latest
 
 ## Examples of usage
 
